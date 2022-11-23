@@ -5,6 +5,7 @@ import com.learningstuff.springboot_2_7_security.services.CustomUserDetailServic
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,17 +28,31 @@ public class SecurityConfig {
     private final CustomUserDetailService customUserDetailService;
     private final MyBasicAuthenticationEntryPoint authenticationEntryPoint;
 
+    @Order(1)
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain1(HttpSecurity http) throws Exception {
 
-        http.authorizeRequests()
+        http.antMatcher("/secured/**")
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .and()
+                .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().httpBasic()
-                .authenticationEntryPoint(authenticationEntryPoint)
                 .and().cors().disable().csrf().disable();
+
+        return http.build();
+    }
+
+    @Order(2)
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http.authorizeRequests()
+                .anyRequest().permitAll();
 
         return http.build();
     }

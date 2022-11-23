@@ -23,4 +23,9 @@ public class SecuredController {
         return ResponseEntity.status(HttpStatus.OK).body("Secured URL");
     }
 
+    @GetMapping(value = "/v2")
+    public ResponseEntity<?> securedV2() {
+        return ResponseEntity.status(HttpStatus.OK).body("Secured URL V2");
+    }
+
 }
