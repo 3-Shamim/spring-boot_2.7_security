@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SecuredController {
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public ResponseEntity<?> secured() {
         return ResponseEntity.status(HttpStatus.OK).body("Secured URL");
     }
